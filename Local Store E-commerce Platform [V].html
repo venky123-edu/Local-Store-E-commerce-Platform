@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Market - Your Neighborhood Store Online</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .cart-count {
+            top: -8px;
+            right: -8px;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .review-star {
+            color: #FFD700;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/93999e0f-a2b0-45e4-a481-70f5998ed943.png" alt="Local Market logo with green leaf and shopping basket motif" class="w-10 h-10">
+                    <h1 class="text-xl font-bold text-green-600">Local Market</h1>
+                </div>
+                <nav class="hidden md:flex space-x-6">
+                    <a href="#" class="text-gray-700 hover:text-green-600">Home</a>
+                    <a href="#products" class="text-gray-700 hover:text-green-600">Products</a>
+                    <a href="#about" class="text-gray-700 hover:text-green-600">About</a>
+                    <a href="#contact" class="text-gray-700 hover:text-green-600">Contact</a>
+                </nav>
+                <div class="relative">
+                    <button id="cartButton" class="p-2 rounded-full hover:bg-gray-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                        </svg>
+                        <span id="cartCount" class="cart-count absolute bg-green-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">0</span>
+                    </button>
+                </div>
+                <button class="md:hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-green-50 to-blue-50 py-16">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-8 md:mb-0">
+                    <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-gray-800">Fresh Produce From Local Farms</h1>
+                    <p class="text-lg text-gray-600 mb-6">Support your community with high-quality, locally-sourced groceries delivered to your door.</p>
+                    <button class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition duration-300">
+                        Shop Local Now
+                    </button>
+                </div>
+                <div class="md:w-1/2">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/7cf81a74-3005-46ff-956c-8cfdcc69036b.png" alt="Colorful basket overflowing with fresh fruits and vegetables from local farms" class="rounded-lg shadow-lg">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="py-12">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-2xl font-bold text-gray-800">Our Products</h2>
+                <div class="flex space-x-4">
+                    <select id="sortBy" class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option value="default">Sort by</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="name-asc">Name: A-Z</option>
+                        <option value="name-desc">Name: Z-A</option>
+                    </select>
+                    <button id="filterButton" class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                        </svg>
+                        Filters
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filter Panel (hidden by default) -->
+            <div id="filterPanel" class="hidden bg-white p-4 rounded-lg shadow-md mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <h3 class="font-medium mb-2">Categories</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded text-green-600" checked>
+                                <span class="ml-2">Fruits</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded text-green-600" checked>
+                                <span class="ml-2">Vegetables</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded text-green-600">
+                                <span class="ml-2">Dairy</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded text-green-600">
+                                <span class="ml-2">Bakery</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="font-medium mb-2">Price Range</h3>
+                        <div class="flex items-center justify-between mb-2">
+                            <span>$1</span>
+                            <span>$50+</span>
+                        </div>
+                        <input type="range" class="w-full" min="1" max="50" value="25">
+                    </div>
+                    <div>
+                        <h3 class="font-medium mb-2">Availability</h3>
+                        <label class="flex items-center">
+                            <input type="checkbox" class="rounded text-green-600" checked>
+                            <span class="ml-2">In Stock</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="productsContainer">
+                <!-- Product cards will be dynamically inserted here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Cart Modal -->
+    <div id="cartModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen">
+            <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-bold">Your Shopping Cart</h3>
+                        <button id="closeCart" class="text-gray-500 hover:text-gray-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div id="cartItems" class="space-y-4 max-h-96 overflow-y-auto">
+                        <!-- Cart items will be inserted here -->
+                    </div>
+                    <div class="border-t mt-4 pt-4">
+                        <div class="flex justify-between mb-2">
+                            <span>Subtotal:</span>
+                            <span id="cartSubtotal">$0.00</span>
+                        </div>
+                        <div class="flex justify-between mb-2">
+                            <span>Delivery:</span>
+                            <span>Free</span>
+                        </div>
+                        <div class="flex justify-between font-bold text-lg">
+                            <span>Total:</span>
+                            <span id="cartTotal">$0.00</span>
+                        </div>
+                    </div>
+                    <button id="checkoutButton" class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg mt-6 transition duration-300">
+                        Proceed to Checkout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Tracking Section -->
+    <section id="tracking" class="bg-gray-100 py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl font-bold text-center mb-8">Track Your Order</h2>
+            <div class="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="p-6">
+                    <div class="flex justify-between mb-6">
+                        <div class="bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium">
+                            Order #12654
+                        </div>
+                        <div class="text-gray-600">
+                            Delivered on Jan 12, 2023
+                        </div>
+                    </div>
+                    <div class="mb-6">
+                        <div class="flex justify-between mb-2 text-sm">
+                            <span class="text-gray-600">Products (3)</span>
+                            <span>$42.50</span>
+                        </div>
+                        <div class="flex justify-between mb-2 text-sm">
+                            <span class="text-gray-600">Delivery</span>
+                            <span>Free</span>
+                        </div>
+                        <div class="flex justify-between font-medium mt-3 pt-3 border-t">
+                            <span>Total</span>
+                            <span>$42.50</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="font-medium mb-4">Order Status</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 h-10 w-10 flex items-center justify-center bg-green-600 rounded-full text-white">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm font-medium">Order Placed</p>
+                                    <p class="text-xs text-gray-500">Jan 10, 3:42 PM</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 h-10 w-10 flex items-center justify-center bg-green-600 rounded-full text-white">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm font-medium">Processing</p>
+                                    <p class="text-xs text-gray-500">Jan 10, 4:15 PM</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 h-10 w-10 flex items-center justify-center bg-green-600 rounded-full text-white">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                    </svg>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm font-medium">Shipped</p>
+                                    <p class="text-xs text-gray-500">Jan 11, 10:30 AM</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 h-10 w-10 flex items-center justify-center bg-green-600 rounded-full text-white">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm font-medium">Delivered</p>
+                                    <p class="text-xs text-gray-500">Jan 12, 2:15 PM</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reviews Section -->
+    <section id="reviews" class="py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl font-bold text-center mb-8">Customer Reviews</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <div class="flex items-center mb-4">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/3c05383e-2d50-445a-8ed3-11745adc41e3.png" alt="Portrait of happy middle-aged woman smiling" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-medium">Sarah Johnson</h4>
+                            <div class="flex">
+                                <span class="review-star">★</span>
+                                <span class="review-star">★</span>
+                                <span class="review-star">★</span>
+                                <span class="review-star">★</span>
+                                <span class="review-star">★</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">"The fruits and vegetables are always fresh and delicious. I especially love the organic apples!"</p>
+                    <div class="flex justify-end mt-4 text-sm text-gray-500">
+                        Jan 15, 2023
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <div class="flex items-center mb-4">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/c9a99f6d-29a5-4455-93e2-b46eba366ad6.png" alt="Portrait of young man with glasses giving thumbs up" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-medium">Michael Chen</h4>
+                            <div class="flex">
+                                <span class="review-star">★</span>
+                                <span class="review-star">★</span>
+                                <span class="review-star">★</span>
+                                <span class="review-star">★</span>
+                                <span class="review-star">★</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">"Delivery was prompt and the food was packaged beautifully. Will definitely order again."</p>
+                    <div class="flex justify-end mt-4 text-sm text-gray-500">
+                        Dec 28, 2022
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <div class="flex items-center mb-4">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/55e12778-0af3-4774-91ee-b48cca49b394.png" alt="Portrait of elderly woman holding grocery bag" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-medium">Margaret Williams</h4>
+                            <div class="flex">
+                                <span class="review-star">★</span>
+                                <span class="review-star">★</span>
+                                <span class="review-star">★</span>
+                                <span class="review-star">★</span>
+                                <span class="review-star">★</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">"As someone who can't easily get to the store, this service has been a lifesaver. The quality is always excellent."</p>
+                    <div class="flex justify-end mt-4 text-sm text-gray-500">
+                        Nov 30, 2022
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/fbefbfbb-c0aa-427f-a336-51f0e78b9acf.png" alt="Local Market logo simplified version" class="w-8 h-8">
+                        <h3 class="text-xl font-bold">Local Market</h3>
+                    </div>
+                    <p class="text-gray-400 mb-4">Bringing fresh, local produce to your doorstep.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z" />
+                            </svg>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                            </svg>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-lg font-medium mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Home</a></li>
+                        <li><a href="#products" class="text-gray-400 hover:text-white">Products</a></li>
+                        <li><a href="#tracking" class="text-gray-400 hover:text-white">Order Tracking</a></li>
+                        <li><a href="#reviews" class="text-gray-400 hover:text-white">Reviews</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-medium mb-4">Customer Service</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Contact Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">FAQs</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Shipping Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Returns & Refunds</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-medium mb-4">Contact</h4>
+                    <ul class="space-y-2">
+                        <li class="text-gray-400">123 Main Street, Localville</li>
+                        <li class="text-gray-400">Phone: (555) 123-4567</li>
+                        <li class="text-gray-400">Email: info@localmarket.com</li>
+                        <li class="text-gray-400">Mon-Fri: 9am-6pm</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>© 2023 Local Market. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Sample product data
+        const products = [
+            {
+                id: 1,
+                name: "Organic Apples",
+                category: "Fruits",
+                price: 3.99,
+                description: "Fresh, crisp organic apples from local orchards.",
+                image: "https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/8fc18db8-481b-4396-9ad6-f9be87d60dc3.png",
+                imageAlt: "Basket of fresh red organic apples with green leaves",
+                rating: 4.7,
+                stock: 24
+            },
+            {
+                id: 2,
+                name: "Farm Fresh Eggs",
+                category: "Dairy",
+                price: 4.50,
+                description: "Free-range eggs from happy, healthy chickens.",
+                image: "https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/fresh-eggs.jpg",
+                imageAlt: "Fresh free-range eggs in natural cardboard carton",
+                rating: 4.9,
+                stock: 18
+            },
+            {
+                id: 3,
+                name: "Whole Grain Bread",
+                category: "Bakery",
+                price: 5.25,
+                description: "Artisan whole grain bread baked fresh daily.",
+                image: "https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/artisan-bread.jpg",
+                imageAlt: "Freshly baked artisan whole grain bread with crusty exterior",
+                rating: 4.6,
+                stock: 12
+            },
+            {
+                id: 4,
+                name: "Organic Spinach",
+                category: "Vegetables",
+                price: 2.99,
+                description: "Tender organic spinach leaves, perfect for salads.",
+                image: "https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/fresh-spinach.jpg",
+                imageAlt: "Organic spinach leaves in wooden basket ready for cooking",
+                rating: 4.5,
+                stock: 30
+            },
+            {
+                id: 5,
+                name: "Local Honey",
+                category: "Pantry",
+                price: 7.99,
+                description: "Raw, unfiltered honey from local beekeepers.",
+                image: "https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/local-honey.jpg",
+                imageAlt: "Raw unfiltered local honey in glass jar with honey dipper",
+                rating: 4.8,
+                stock: 14
+            },
+            {
+                id: 6,
+                name: "Cherry Tomatoes",
+                category: "Vegetables",
+                price: 4.25,
+                description: "Sweet cherry tomatoes grown without pesticides.",
+                image: "https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/cherry-tomatoes.jpg",
+                imageAlt: "Vibrant cherry tomatoes on vine in rustic wooden crate",
+                rating: 4.7,
+                stock: 22
+            },
+            {
+                id: 7,
+                name: "Grass-Fed Beef",
+                category: "Meat",
+                price: 12.99,
+                description: "Tender cuts from cattle raised on pasture.",
+                image: "https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/grass-fed-beef.jpg",
+                imageAlt: "Premium grass-fed beef steaks on white butcher paper",
+                rating: 4.9,
+                stock: 8
+            },
+            {
+                id: 8,
+                name: "Mixed Berries",
+                category: "Fruits",
+                price: 6.50,
+                description: "Seasonal mix of strawberries, blueberries and raspberries.",
+                image: "https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/mixed-berries.jpg",
+                imageAlt: "Fresh mixed berries including strawberries, blueberries and raspberries",
+                rating: 4.8,
+                stock: 15
+            }
+        ];
+
+        // Shopping cart
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        
+        // DOM elements
+        const productsContainer = document.getElementById('productsContainer');
+        const cartButton = document.getElementById('cartButton');
+        const cartModal = document.getElementById('cartModal');
+        const closeCart = document.getElementById('closeCart');
+        const cartItems = document.getElementById('cartItems');
+        const cartCount = document.getElementById('cartCount');
+        const cartSubtotal = document.getElementById('cartSubtotal');
+        const cartTotal = document.getElementById('cartTotal');
+        const checkoutButton = document.getElementById('checkoutButton');
+        const sortBy = document.getElementById('sortBy');
+        const filterButton = document.getElementById('filterButton');
+        const filterPanel = document.getElementById('filterPanel');
+
+        // Display products
+        function displayProducts(productsToDisplay = products) {
+            productsContainer.innerHTML = '';
+            
+            productsToDisplay.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card bg-white rounded-lg overflow-hidden shadow-sm transition duration-300';
+                productCard.innerHTML = `
+                    <div class="relative">
+                        <img src="${product.image}" alt="${product.imageAlt}" class="w-full h-48 object-cover">
+                        ${product.stock <= 5 ? '<div class="absolute top-2 right-2 bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-medium">Low Stock</div>' : ''}
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-medium text-lg mb-1">${product.name}</h3>
+                        <p class="text-gray-600 text-sm mb-2">${product.description}</p>
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <span class="review-star">★</span>
+                                <span class="review-star">★</span>
+                                <span class="review-star">★</span>
+                                <span class="review-star">★</span>
+                                <span class="review-star">${product.rating >= 4.5 ? '★' : '☆'}</span>
+                                <span class="ml-1 text-sm text-gray-600">${product.rating}</span>
+                            </div>
+                            <div class="font-bold text-green-600">$${product.price.toFixed(2)}</div>
+                        </div>
+                        <button class="w-full bg-green-100 hover:bg-green-200 text-green-800 py-2 rounded-lg font-medium transition duration-300 add-to-cart" data-id="${product.id}">
+                            Add to Cart
+                        </button>
+                    </div>
+                `;
+                productsContainer.appendChild(productCard);
+            });
+
+            // Add event listeners to "Add to Cart" buttons
+            document.querySelectorAll('.add-to-cart').forEach(button => {
+                button.addEventListener('click', addToCart);
+            });
+        }
+
+        // Add to cart
+        function addToCart(e) {
+            const productId = parseInt(e.target.getAttribute('data-id'));
+            const product = products.find(p => p.id === productId);
+            
+            // Check if product is already in cart
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    image: product.image,
+                    imageAlt: product.imageAlt,
+                    quantity: 1
+                });
+            }
+            
+            updateCart();
+            showToast(`${product.name} added to cart`);
+        }
+
+        // Update cart
+        function updateCart() {
+            // Save cart to localStorage
+            localStorage.setItem('cart', JSON.stringify(cart));
+            
+            // Update cart count
+            const count = cart.reduce((total, item) => total + item.quantity, 0);
+            cartCount.textContent = count;
+            
+            // Update cart items in modal
+            cartItems.innerHTML = '';
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<p class="text-center text-gray-500 py-4">Your cart is empty</p>';
+                cartSubtotal.textContent = '$0.00';
+                cartTotal.textContent = '$0.00';
+                return;
+            }
+            
+            let subtotal = 0;
+            
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
+                
+                const cartItem = document.createElement('div');
+                cartItem.className = 'flex items-center py-4 border-b';
+                cartItem.innerHTML = `
+                    <img src="${item.image}" alt="${item.imageAlt}" class="w-16 h-16 object-cover rounded">
+                    <div class="ml-4 flex-1">
+                        <h4 class="font-medium">${item.name}</h4>
+                        <div class="flex justify-between mt-1">
+                            <div class="flex items-center">
+                                <button class="text-gray-500 hover:text-green-600 quantity-btn" data-action="decrease" data-id="${item.id}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                                    </svg>
+                                </button>
+                                <span class="mx-2">${item.quantity}</span>
+                                <button class="text-gray-500 hover:text-green-600 quantity-btn" data-action="increase" data-id="${item.id}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <span class="font-medium">$${itemTotal.toFixed(2)}</span>
+                        </div>
+                    </div>
+                    <button class="text-gray-500 hover:text-red-500 ml-2 remove-btn" data-id="${item.id}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                    </button>
+                `;
+                cartItems.appendChild(cartItem);
+            });
+            
+            // Format subtotal and total
+            cartSubtotal.textContent = `$${subtotal.toFixed(2)}`;
+            cartTotal.textContent = `$${subtotal.toFixed(2)}`;
+            
+            // Add event listeners to quantity buttons
+            document.querySelectorAll('.quantity-btn').forEach(button => {
+                button.addEventListener('click', updateQuantity);
+            });
+            
+            // Add event listeners to remove buttons
+            document.querySelectorAll('.remove-btn').forEach(button => {
+                button.addEventListener('click', removeItem);
+            });
+        }
+
+        // Update quantity
+        function updateQuantity(e) {
+            const action = e.target.closest('button').getAttribute('data-action');
+            const id = parseInt(e.target.closest('button').getAttribute('data-id'));
+            const item = cart.find(item => item.id === id);
+            
+            if (action === 'increase') {
+                item.quantity += 1;
+            } else if (action === 'decrease' && item.quantity > 1) {
+                item.quantity -= 1;
+            }
+            
+            updateCart();
+        }
+
+        // Remove item
+        function removeItem(e) {
+            const id = parseInt(e.target.closest('button').getAttribute('data-id'));
+            cart = cart.filter(item => item.id !== id);
+            updateCart();
+        }
+
+        // Sort products
+        function sortProducts(value) {
+            let sortedProducts = [...products];
+            
+            switch(value) {
+                case 'price-low':
+                    sortedProducts.sort((a, b) => a.price - b.price);
+                    break;
+                case 'price-high':
+                    sortedProducts.sort((a, b) => b.price - a.price);
+                    break;
+                case 'name-asc':
+                    sortedProducts.sort((a, b) => a.name.localeCompare(b.name));
+                    break;
+                case 'name-desc':
+                    sortedProducts.sort((a, b) => b.name.localeCompare(a.name));
+                    break;
+                default:
+                    break;
+            }
+            
+            displayProducts(sortedProducts);
+        }
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'fixed bottom-4 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg animate-fade-in-out';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.add('animate-fade-out');
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            displayProducts();
+            updateCart();
+            
+            // Cart modal functionality
+            cartButton.addEventListener('click', () => {
+                cartModal.classList.remove('hidden');
+            });
+            
+            closeCart.addEventListener('click', () => {
+                cartModal.classList.add('hidden');
+            });
+            
+            // Close modal when clicking outside
+            cartModal.addEventListener('click', (e) => {
+                if (e.target === cartModal) {
+                    cartModal.classList.add('hidden');
+                }
+            });
+            
+            // Sort functionality
+            sortBy.addEventListener('change', (e) => {
+                sortProducts(e.target.value);
+            });
+            
+            // Filter panel toggle
+            filterButton.addEventListener('click', () => {
+                filterPanel.classList.toggle('hidden');
+            });
+            
+            // Checkout button
+            checkoutButton.addEventListener('click', () => {
+                if (cart.length > 0) {
+                    showToast('Proceeding to checkout');
+                    setTimeout(() => {
+                        window.location.href = '#tracking';
+                        cartModal.classList.add('hidden');
+                    }, 1000);
+                } else {
+                    showToast('Your cart is empty');
+                }
+            });
+        });
+
+        // Sample animation styles
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInOut {
+                0% { opacity: 0; transform: translateY(20px); }
+                10% { opacity: 1; transform: translateY(0); }
+                90% { opacity: 1; transform: translateY(0); }
+                100% { opacity: 0; transform: translateY(-20px); }
+            }
+            .animate-fade-in-out {
+                animation: fadeInOut 2.3s ease forwards;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
+
